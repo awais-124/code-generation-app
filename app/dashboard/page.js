@@ -1,26 +1,19 @@
 'use client';
-import { auth } from '@/lib/firebase';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { signOut } from 'firebase/auth';
-import Navbar from '@/components/Navbar';
+import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
+import FullScreenLoader from '@/components/FullScreenLoader';
 
 export default function Dashboard() {
-  const [user] = useAuthState(auth);
+  const { user, loading, logout } = useAuth();
   const router = useRouter();
 
-  if (!user) {
-    router.push('/login');
-    return null;
-  }
+  if (loading) return <FullScreenLoader />;
+  if (!user) router.push('/login');
 
   return (
     <div>
-      <Navbar />
-      <main>
-        <h1>Welcome, {user.displayName || user.email}</h1>
-        <p>This is your dashboard. Code generation features coming soon!</p>
-      </main>
+      <h1>Welcome, {user.email}</h1>
+      <button onClick={logout}>Sign Out</button>
     </div>
   );
 }

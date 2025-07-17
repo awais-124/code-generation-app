@@ -48,6 +48,11 @@
   background-color: var(--bg-darker);
 }
 
+.authContainer h1{ 
+  margin-bottom: 20px;
+}
+
+
 .authForm {
   display: flex;
   flex-direction: column;
@@ -63,6 +68,10 @@
   border: 1px solid var(--accent);
   background-color: var(--bg-dark);
   color: var(--text);
+}
+
+.authForm input:focus {
+    border: 1px solid var(--white);
 }
 
 .authForm button {

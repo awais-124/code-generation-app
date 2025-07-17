@@ -6,12 +6,23 @@
   --text-secondary: #b8b8b8;
   --primary: #4cc9f0;
   --error: #f72585;
+  --white: #ffffff;
+  --black: #000000;
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  transition:all 0.3s
+}
+
+*:hover {
+  transition:all 0.3s
+}
+
+*:focus {
+  outline:none;
 }
 
 body {
@@ -24,4 +35,10 @@ body {
 .dark-theme {
   background-color: var(--bg-dark);
   color: var(--text);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
 }

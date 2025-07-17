@@ -1,29 +1,39 @@
 'use client';
-import { useState } from 'react';
-import { emailSignIn } from '@/lib/firebase';
-import AuthProviders from '@/components/AuthProviders';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/context/AuthProvider';
 import Link from 'next/link';
+import AuthProviders from '@/components/AuthProviders';
+import FullScreenLoader from '@/components/FullScreenLoader';
+import ErrorMessage from '@/components/ErrorMessage';
 import styles from '@/styles/Auth.module.css';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const { user, loading, error, loginWithEmail } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user) router.push('/dashboard');
+  }, [user, router]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await emailSignIn(email, password);
-    } catch (err) {
-      setError(err.message);
+      await loginWithEmail(email, password);
+    } catch (error) {
+      console.error('Login failed:', error);
     }
   };
+
+  if (loading) return <FullScreenLoader />;
 
   return (
     <div className={styles.authContainer}>
       <h1>Welcome Back</h1>
       <form onSubmit={handleSubmit} className={styles.authForm}>
-        <input
+         <input
           type="email"
           placeholder="Email"
           value={email}
@@ -37,14 +47,12 @@ export default function Login() {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        {error && <p className={styles.error}>{error}</p>}
-        <button type="submit">Login</button>
+        <ErrorMessage error={error} />
+        <button type="submit">Sign In</button>
       </form>
-      
       <AuthProviders />
-      
       <p className={styles.switchAuth}>
-        New user? <Link href="/register">Register here</Link>
+        Don't have an account? <Link href="/register">Sign up</Link>
       </p>
     </div>
   );
